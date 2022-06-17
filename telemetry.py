@@ -1,6 +1,7 @@
 """Send log messages to remote log aggregation servers."""
 import requests
 import os
+import sys
 from loguru import logger
 
 # Sensitive data stored in environmental variables
@@ -22,3 +23,6 @@ def send_log_message(message):
         logger.debug(r.text)
     except Exception as e:
         logger.warning(f"Error sending message to Splunk: {e}")
+
+if __name__ == "__main__":
+    send_log_message(sys.argv[1])
