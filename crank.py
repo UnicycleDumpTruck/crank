@@ -6,7 +6,6 @@ import math
 import pygame
 import sys
 import requests
-from loguru import logger
 from pygame.locals import (
     K_1,
     K_2,
@@ -28,11 +27,6 @@ from pygame.locals import (
 
 import telemetry
 
-logger.remove()
-logger.add(sys.stderr, level="INFO")
-logger.add("main.log", rotation="1024 MB")
-
-
 pygame.init()
 pygame.display.init()
 pygame.mouse.set_visible(False)
@@ -47,11 +41,11 @@ grey = (128, 128, 128)
 
 counterDisplay = pygame.display.set_mode((display_width, display_height))
 
-red_background_image = pygame.image.load("red.png").convert()
-blue_background_image = pygame.image.load("blue.png").convert()
+red_background_image = pygame.image.load("/home/exhibits/crank/red.png").convert()
+blue_background_image = pygame.image.load("/home/exhibits/crank/blue.png").convert()
 
-gilroy_location = 'Gilroy-Bold.ttf'
-gilsans_location = 'GillSans-Bold.ttf'
+gilroy_location = '/home/exhibits/crank/Gilroy-Bold.ttf'
+gilsans_location = '/home/exhibits/crank/GillSans-Bold.ttf'
 
 current_background = red_background_image
 text_color = white
