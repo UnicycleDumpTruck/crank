@@ -1,6 +1,8 @@
 """Send log messages to remote log aggregation servers."""
 import requests
 import os
+import sys
+from loguru import logger
 
 # Sensitive data stored in environmental variables
 # On Ubuntu, put variables in /etc/environment
@@ -20,6 +22,9 @@ def send_log_message(message):
                           json=payload, verify=False)
         print(r.text)
     except Exception as e:
-        print(f"Error sending message to Splunk: {e}")
+        logger.warning(f"Error sending message to Splunk: {e}")
 
 send_log_message("boot")
+
+if __name__ == "__main__":
+    send_log_message(sys.argv[1])
