@@ -185,7 +185,9 @@ while running:
         if rpm > max_rpm:
             max_rpm = rpm
         if rpm == 0:
+            temperature = os.popen("vcgencmd measure_temp").readline().replace("temp=","").replace("'C","")
             telemetry.send_log_message(f"r={max_rpm} b={balls_dropped}")
+            telemetry.send_point_in_thread(max_rpm, balls_dropped, temperature)
             max_rpm = 0
     if balls_dropped != last_balls_dropped:
         display_stats(rpm, balls_dropped)
