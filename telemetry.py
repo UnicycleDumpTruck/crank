@@ -30,13 +30,16 @@ client = influxdb_client.InfluxDBClient(
 write_api = client.write_api(write_options=SYNCHRONOUS)
 
 p = influxdb_client.Point("exhibit_boot").tag("location", "Power2Play").field("exhibit_name", "crank")
-write_api.write(bucket=bucket, org=org, record=p)
+try:
+    write_api.write(bucket=bucket, org=org, record=p)
+except Exception as e:
+    logger.warning(f"Error sending boot point to InfluxDB: {e}")
 
-def send_point_in_thread(max_rpm, balls_dropped):
+def send_point_in_thread(max_rpm, balls_dropped, temperature):
     logging_thread = threading.Thread(target=send_point, args=(max_rpm, balls_dropped, temperature))
     logging_thread.start()
 
-def send_point(duration, count, temperature):
+def send_point(max_rpm, balls_dropped, temperature):
     try:
         p = influxdb_client.Point("crank_session").tag("location", "Power2Play").field("max_rpm", max_rpm).field("balls_dropped", balls_dropped).field("temperature", temperature)
         write_api.write(bucket=bucket, org=org, record=p)
@@ -53,6 +56,6 @@ def send_msg(message):
     try:
         r = requests.post(SPLUNK_URL, headers={'Authorization': SPLUNK_AUTH},
                           json=payload, verify=False)
-        logger.debug(r.text)
+        logger.debug(f"Splunk response: {r.text}")
     except Exception as e:
         logger.warning(f"Error sending message to Splunk: {e}")
